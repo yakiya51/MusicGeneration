@@ -1,18 +1,5 @@
 from classes import *
-
-
-# Gets the lowest and highest MIDI note in an events list
-def get_note_range(events):
-    highest_note = 0
-    lowest_note = 200
-    for event in events:
-        if isinstance(event, NoteOnEvent):
-            if event.note > highest_note:
-                highest_note = event.note
-            if event.note < lowest_note:
-                lowest_note = event.note
-    return lowest_note, highest_note
-
+import py_midicsv as pm
 
 # Converts ticks to MS based on current BPM and Default pulses per quarter note (PPQ)
 def ticks2ms(tick, bpm):
@@ -69,19 +56,8 @@ def objects2txt(events):
                 pass
     # Remove last space
     str_event = str_events.rstrip()
-    with open(rf'C:\Users\Yuta\Documents\PythonProjects\MusicGenerationV3\input.txt', "w") as txt:
+    with open(rf'./input.txt', "w") as txt:
         txt.write(str_events)
-
-
-def transpose(csv_list, transpose_value):
-    transposed = []
-    for event in csv_list:
-        if 'Note_on_c' in event or 'Note_off_c' in event:
-            event[2] = str(int(event[2]) + transpose_value)
-            transposed.append(event)
-        else:
-            transposed.append(event)
-    return transposed
 
 
 def change_speed(csv_list, change_percentage):
@@ -94,3 +70,18 @@ def change_speed(csv_list, change_percentage):
             else:
                 changed.append(event)
     return changed
+
+
+# Convert midi song into 2d string list, convert numerical values from string to int
+def midi2list(path):
+    str_list = pm.midi_to_csv(path)
+    for i in range(len(str_list)):
+        str_list[i] = (str_list[i].replace(' ', '').replace('\n', '')).split(',')
+        for j in range(len(str_list[i])):
+            if str_list[i][j].isdigit():
+                str_list[i][j] = int(str_list[i][j])
+
+    return str_list
+
+
+

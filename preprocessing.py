@@ -99,13 +99,13 @@ def midi2txt(path):
     events_list = []
     # Go through each MIDI file within the path
     for file_name in os.listdir(path):
-        if file_name.endswith('.mid'):
+        if file_name.lower().endswith('.mid'):
             # Parse MIDI into a list where each element is a row in the CSV
             csv_list = pm.midi_to_csv(path + "/" + file_name)
 
             # Uncomment to save the csv file for each MIDI:
-            #with open(rf'C:\Users\Yuta\Documents\PythonProjects\MusicGenerationV3\data\{file_name}.txt', "w") as txt:
-                #txt.writelines(csv_list)
+            with open(rf'./{path}/{file_name}.txt', "w") as txt:
+                txt.writelines(csv_list)
 
             # Put each row of the csv into a list
             for i in range(len(csv_list)):
@@ -205,7 +205,7 @@ def unique_events(path):
     print(f'{len(sorted(set(events)))} unique events')
 
 
-#midi2txt('./data')
+midi2txt('./data')
 #txt2midi('./input.txt')
-unique_events('./input.txt')
+#unique_events('./input.txt')
 
